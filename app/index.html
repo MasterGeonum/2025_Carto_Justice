@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="shortcut icon" href="/img/logo.png">
+    <!-- script OL-->
+    <link rel="stylesheet" href="./node_modules/ol/ol.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol/ol.css" type="text/css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol-ext/dist/ol-ext.min.css"> <!-- ol-ext CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ol-ext/dist/ol-ext.min.js"></script> <!-- ol-ext JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script> <!--PopperJS pour les toolsTips-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carto-justice</title>
+  </head>
+  <body>
+
+    <!-- =============================================================================== -->
+    <!-- On créer ici la div conteneur qui vas accueillir tous les elements de la page -->
+    <!-- =============================================================================== -->
+    <div id="container">
+      <nav class="navbar navbar-expand-md theme-color z-3">
+        <div class="container-fluid">
+          <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="d-flex align-items-center">
+            <img id ="logo" src="/img/logo.png" alt="Logo">
+            <h2 style="margin-right: 20px;">Carto-justice</h2>
+          </div>
+          <div class="collapse navbar-collapse" id="menu">
+            <ul class="navbar-nav">
+              <li class="nav-item dropdown">
+                <a class="nav-link text-color dropdown-toggle" data-bs-toggle="dropdown" style="font-size: 18px;" href="#">Carte</a>
+                <ul class="dropdown-menu">
+                  <li><a href="#" class="dropdown-item" id="basic-button">Où trouver un point-justice ?</a></li>
+                  <li><a href="#" class="dropdown-item" id="advanced-button">Carte statistique</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-color" href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasApropos">A propos</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <!-- Div qui contient la carte -->
+      <div id="map"></div>
+      <!-- Choix de la couche de fond -->
+      <div class="map-controls" style="position: absolute; top: 70px; right: 10px;" >
+        <!-- <label for="basemap-select">Choisir la couche de fond :</label> -->
+        <select class="form-select" id="basemap-select">
+          <option value="osm">OSM</option>
+          <option value="positron">Positron</option>
+        </select>
+        <div class="control-zoom">
+          <button id="zoom-in">+</button>
+          <button id="zoom-out">−</button>
+        </div>
+      </div>
+      <!-- ========================= Onglet latéral ========================-->
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-8 col-md-5 col-lg-3 p-3 z-1" id="sidebar">
+            <div class="input-group mb-3">
+              <button class="btn-primary z-1" id="btn-layer-panel">=</button>
+                <input type="text" class="form-control z-1" id="search" placeholder="Rechercher une adresse...">
+                <ul id="suggestions"></ul>
+              <button class="btn-outline-secondary custom-size" id="searchButton">
+                <img src="/img/recherche.png" alt="Rech" width="20">
+              </button>
+              <button class="btn-outline-secondary custom-size" id="locate">
+                <img src="/img/localisation.svg" alt="Localisation" width="20">
+              </button>
+            </div>
+            <!-- liste des point de justice a proximiter -->
+            <div id="layer-content" class="z-1" style="display: none;">
+              <div id="list-distance-pj" class="mb-2 theme-layer theme-color2 z-1">
+                <h5> Point-justices les plus proches</h5>
+                <table id="closest-points-table" class="table table-scroll">
+                  <thead>
+                    <tr>
+                      <th>Nom</th>
+                      <th>Distance (km)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Les lignes du tableau seront ajoutées ici par JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+              <!-- Gestion des couches -->
+              <div id="control-couches" class="mb-2 theme-layer theme-color2">
+                <h5>Filtrer par zones administratives</h5>
+                <div class="form-check">
+                  <input type="radio" class="form-check-input" id="checkbox-cour_appel" name="layer-type" checked>
+                  <label class="form-check-label" for="checkbox-cour_appel">Cour d'Appel</label>
+                </div>
+                <div class="form-check">
+                  <input type="radio" class="form-check-input" id="checkbox-trib_judiciaire" name="layer-type">
+                  <label class="form-check-label" for="checkbox-trib_judiciaire">Tribunal judiciaire</label>
+                </div>
+                <div class="form-check">
+                  <input type="radio" class="form-check-input" id="checkbox-prudhomme" name="layer-type">
+                  <label class="form-check-label" for="checkbox-prudhomme">Conseil des prud'hommes</label>
+                </div>
+              </div>
+
+              <!-- Liste des indicateur -->
+              <div id="indicateur-panel" class="mb-2 theme-layer theme-color2">
+                <h5>Afficher des indicateurs</h5>
+                <ul class="list-group" id="list-indic"></ul>
+                <div class="form-check separation-1">
+                  <input type="checkbox" class="form-check-input" id="checkbox-commune">
+                  <label class="form-check-label " for="checkbox-commune">Afficher l'échelle communale </label>
+                </div>
+              </div>
+
+              <!-- Liste des type de point de justice -->
+              <div id="list-type-panel" class="mb-2 theme-layer theme-color2">
+                <h5>Type de point-justices</h5>
+                <ul class="list-group" id="list-type"></ul>
+                <div class="form-check separation-1">
+                  <input type="checkbox" class="form-check-input" id="checkbox-pt_justice" checked>
+                  <label class="form-check-label " for="checkbox-pt_justice">Afficher\Masquer les point-justices</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================ Onglet latéral d'information Bootstrap ===================== -->
+      <div class="offcanvas offcanvas-end offcanvas-no-backdrop theme-color2 vh-100 p-2 custom-padding size-info"
+        id="infoPanel" data-bs-backdrop="false" data-bs-keyboard="false" data-bs-focus="false">
+        <div class="offcanvas-header dynamic-info titre-info">
+          <h4 class="offcanvas-title">Informations</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body " id="info-content" data-bs-focus="false">
+          <div id="entete-info">
+            <div id="info-pj"> Cliquez sur un point de justice pour voir ses informations </div>
+          </div>
+
+          <!-- Navigation des onglets -->
+          <ul class="nav nav-tabs nav-justified d-flex flex-nowrap" id="infoTabs" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="tab-info" data-bs-toggle="tab" data-bs-focus="false" href="#app-info" role="tab">A savoir</a>
+            </li>
+            <li class="nav-item" id="tab-stat">
+              <a class="nav-link"  data-bs-toggle="tab" href="#stat-info" role="tab">Statistique</a>
+            </li>
+            <li class="nav-item" id="tab-indicateur">
+              <a class="nav-link"  data-bs-toggle="tab" href="#stat-indicateur" role="tab">Indicateurs</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="tab-list" data-bs-toggle="tab" href="#list-info" role="tab">Liste point-justices</a>
+            </li>
+          </ul>
+
+          <!-- Contenu des sections -->
+          <div class="tab-content mt-3" id="contenu-info">
+            <!-- Information de base sur l'application -->
+            <div id="app-info" class="tab-pane fade show active p-2 custom-padding" role="tabpanel">
+              <p class="fs-6">
+                <h5>Comment utiliser Carto-justice ? </h5>
+
+                <p>Vous rencontrez des bugs où vous êtes perdus ? Appuyer sur la touche F5 de votre clavier ou le bouton “ ⤵️Actualiser cette page” de votre navigateur !
+                </p>
+
+                <h6>Vous cherchez le point-justice le plus proche de chez vous ?</h6>
+                <ul>
+                  <li>📍Pour vous localiser, utilisez le champ de recherche pour trouver une adresse ou un lieu. Cliquez n’importe où sur la carte pour faire disparaître le marqueur.</li>
+                  <li>📌Pour vous localiser, vous pouvez aussi autoriser la localisation sur navigateur pour vous géolocaliser automatiquement. Vous pouvez cliquer sur la croix pour faire disparaître votre localisation.</li>
+                  <li>🔍Utilisez les filtres pour sélectionner le type de point-justice que vous souhaitez afficher sur la carte (par exemple, uniquement ceux qui appartiennent au réseau France Service).</li>
+                  <li>🖱️Cliquez sur un point-justice pour afficher les informations détaillées dans ce menu !</li>
+                  <li>📄L’onglet “liste point-justice” vous permet de trouver jusqu'à 25 points-justices les proches du centre de votre écran.</li>
+                </ul>
+                <h6>Vous voulez accéder aux fonctions avancées de l’application ?</h6>
+                <ul>
+                  <li>❓cliquer sur l’onglet “carte” dans la carte de navigation, puis sélectionnez “carte statistique”</li>
+                  <li>🗺️Pour parcourir les indicateurs, utilisez le menu déroulant de gauche. Vous ne pouvez en sélectionner qu’un à la fois.</li>
+                  <li>🏫Pour afficher les communes, cliquez sur la zone de compétence juridique de votre choix !</li>
+                  <li>📶Dans l’onglet “statistique”, vous pouvez consulter une série de statistiques sur la zone administrative sélectionnée. Vous pouvez aussi consulter les informations détaillées de l’indicateur sélectionné, ainsi que quelques expérimentations.</li>
+                  <li>🔍Dans l’onglet “indicateur”, vous pouvez avoir des détails sur la construction et l’objectif des indicateurs</li>
+                  <li>📄L’onglet “liste point-justice” vous permet de trouver jusqu'à 25 points-justices les proches du centre de votre écran.</li>
+
+                </ul>
+            </div>
+            <!-- Information statistique des graphiques -->
+            <div id="stat-info" class="tab-pane fade" role="tabpanel">
+              <div>
+                <div id="dynamic-info" class ="dynamic-info">
+                  <p>Quelques informations sur la zone sélectionnée :</p>
+                  <!-- Les informations dynamiques seront insérées ici -->
+                </div>
+                <label for="graph-select">Choisir un graphique :</label>
+                <select id="graph-select" class="form-select">
+                  <option value="tribunalChart">Types de point-justices par zone</option>
+                  <option value="visitorChart">Nombre de visiteurs dans les point-justices par zone</option>
+                </select>
+              </div>
+              <div id="graph">
+                <canvas id="tribunalChart" width="400" height="250"></canvas>
+                <canvas id="visitorChart" style="display: none;"></canvas>
+              </div>
+              <div> information sur le graphique affiché </div>
+              <div>
+                <div id="list-categorie-panel" class="mb-2 theme-layer theme-color2">
+                  <h5>Changer catégorie (expérimentale)</h5>
+                  <ul class="list-group" id="list-categorie"></ul>
+                  <div>
+                    <h5>Indice capacité (expérimentale)</h5>
+                    <p>L'indicateur indice de capacité représente l’écart à la moyenne du ratio entre le nombre de places disponibles et la population associée par points justice. 
+                      L’indicateur permet de savoir si un point justice est manque ou non de places présentiel par rapport à la population associée (celle pour qui le point justice est le plus proche). Plus la valeur de l'indice est négative, plus le point est en déficit de places et inversement. </p>
+                    <div id="indice-access"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Information sur les indicateurs -->
+            <div id="stat-indicateur" class="tab-pane fade" role="tabpanel">
+              <div id="dynamic-info2" class ="dynamic-info">
+                <p>Quelques informations sur la zone sélectionnée :</p>
+                <!-- Les informations dynamiques seront insérées ici -->
+              </div>
+              <!-- <ul class="list-group" id="list-indic"></ul> -->
+              <p> Attention : 
+                Les indicateurs ne sont pas à prendre comme des statistiques absolues résumant parfaitement un territoire. Ils sont uniquement là pour aider 
+                ceux qui les consultent à avoir facilement et rapidement accès à un aperçu du territoire.  
+              </p>
+              <h5 id="titre_indicateur"> Titre</h5>
+              <div  class="separation-1" id="txt-indicateur"></div>
+            </div>
+            <!-- Liste des points de justice -->
+            <div id="list-info" class="tab-pane fade" role="tabpanel">
+              <p>Liste des 25 points-justices visible au centre de l'écran</p>
+              <ul class="list-group" id="list-pj"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bouton pour ouvrir l'onglet latéral -->
+      <button id="toggleButton" class="btn-primary position-absolute top-50 translate-middle-y" 
+      data-bs-toggle="offcanvas" data-bs-target="#infoPanel">
+      <img src="/img/prev.png" alt="Ouvrir">
+      </button>
+      
+      <!-- information apropos -->
+      <div class="offcanvas offcanvas-apropos position-fixed top-50 start-50 translate-middle d-flex flex-column justify-content-center align-items-center p-4 w-70 rounded shadow bg-light" tabindex="-1" id="offcanvasApropos" aria-labelledby="offcanvasAproposLabel">
+        <div class="offcanvas-header dynamic-info titre-info">
+          <h5 class="offcanvas-title" id="offcanvasAproposLabel">À propos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column center">
+          <p class="text-justify">
+            Cette application cartographique est un projet exploratoire, dont le but est de développer un outil cartographique interactif et évolutif sur les points d’accès à la justice. L'application s'adresse à la fois 
+            aux utilisateurs cherchant à accéder rapidement à la justice et aux pouvoirs publics 
+            voulant comprendre et anticiper les besoins d'accès à la justice. L'application a été réalisée par des étudiants en master 2 Géographie Numérique et Sentinelle de Lyon, en partenariat avec la SADJAV (Service de l'accès au droit et à la justice et de l'aide aux victimes), 
+            commanditaire du projet, souhaitant disposer d’une cartographie web interactive basée sur des outils open source et utile pour le plus large public possible.
+          </p>
+          <div id="logos-apropos" class="d-flex justify-content-center mt-auto">
+            <img class="image-apropos" src="/img/geonum.jpg" alt="logo">
+            <img class="image-apropos" src="/img/logo_sentinelles.png" alt="logo">
+            <img class="image-apropos" src="/img/logo_lyon2.png" alt="logo">
+            <img class="image-apropos" src="/img/logo_lyon3.png" alt="logo">
+            <img class="image-apropos" src="/img/Logo_IERDJ_RVB.png" alt="logo">
+          </div>
+        </div>
+      </div>
+
+      <!-- Légende -->
+      <div id="legende" style="display: none;">
+        <div class="legend-container">
+          <div class="square"> <span class="label">800</span> </div>
+          <div class="square"> <span class="label">600</span> </div>
+          <div class="square"> <span class="label">200</span> </div>
+          <div class="square"> <span class="label">50</span> </div>
+          <div class="square"> <span class="label">10</span> </div>
+        </div>
+      </div>
+
+      <!-- Auteurs de la carte  -->
+      <div id="auteur">
+        <p>Copyright <a href="https://www.openstreetmap.org/copyright">openstreetmap</a>,
+        Application web  <img src="/img/geonum.jpg" alt=""> <a href="https://mastergeonum.org/">GéoNum </a> Promotion 2024-2025</p>
+      </div>
+
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/chart.umd.js"></script>
+    <script type="module" src="./main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+  </body>
+</html>

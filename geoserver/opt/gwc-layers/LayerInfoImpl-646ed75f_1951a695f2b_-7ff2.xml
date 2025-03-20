@@ -1,0 +1,45 @@
+<GeoServerTileLayer>
+  <id>LayerInfoImpl-646ed75f:1951a695f2b:-7ff2</id>
+  <enabled>true</enabled>
+  <inMemoryCached>true</inMemoryCached>
+  <name>data_point_justice:commune</name>
+  <mimeFormats>
+    <string>image/png</string>
+    <string>image/jpeg</string>
+  </mimeFormats>
+  <gridSubsets>
+    <gridSubset>
+      <gridSetName>WebMercatorQuad</gridSetName>
+      <extent>
+        <coords>
+          <double>-572324.1680463997</double>
+          <double>5066479.728827572</double>
+          <double>1064209.282107344</double>
+          <double>6637050.003208333</double>
+        </coords>
+      </extent>
+    </gridSubset>
+  </gridSubsets>
+  <metaWidthHeight>
+    <int>4</int>
+    <int>4</int>
+  </metaWidthHeight>
+  <expireCache>0</expireCache>
+  <expireClients>0</expireClients>
+  <parameterFilters>
+    <styleParameterFilter>
+      <key>STYLES</key>
+      <defaultValue></defaultValue>
+      <availableStyles class="sorted-set">
+        <string>data_point_justice:age_moyen</string>
+        <string>data_point_justice:nb_victime_1000</string>
+        <string>data_point_justice:part_fmp</string>
+        <string>data_point_justice:taux_chomage</string>
+        <string>data_point_justice:taux_pauvrete</string>
+      </availableStyles>
+      <defaultStyle>data_point_justice:taux_pauvrete</defaultStyle>
+    </styleParameterFilter>
+  </parameterFilters>
+  <gutter>0</gutter>
+  <cacheWarningSkips/>
+</GeoServerTileLayer>

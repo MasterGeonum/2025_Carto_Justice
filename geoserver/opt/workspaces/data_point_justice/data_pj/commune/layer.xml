@@ -1,0 +1,34 @@
+<layer>
+  <name>commune</name>
+  <id>LayerInfoImpl-646ed75f:1951a695f2b:-7ff2</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--74d5a9ab:195613df667:-7ffa</id>
+  </defaultStyle>
+  <styles class="linked-hash-set">
+    <style>
+      <id>StyleInfoImpl--74d5a9ab:195613df667:-7ff3</id>
+    </style>
+    <style>
+      <id>StyleInfoImpl--74d5a9ab:195613df667:-7ffa</id>
+    </style>
+    <style>
+      <id>StyleInfoImpl--74d5a9ab:195613df667:-7ff5</id>
+    </style>
+    <style>
+      <id>StyleInfoImpl--74d5a9ab:195613df667:-7ff7</id>
+    </style>
+    <style>
+      <id>StyleInfoImpl--74d5a9ab:195613df667:-7ffc</id>
+    </style>
+  </styles>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl-646ed75f:1951a695f2b:-7ff3</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2025-02-18 20:50:28.329 UTC</dateCreated>
+  <dateModified>2025-03-17 21:53:03.581 UTC</dateModified>
+</layer>
