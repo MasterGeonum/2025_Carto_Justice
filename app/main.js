@@ -29,12 +29,12 @@ const positronLayer = new TileLayer({
 // =========================================================================================
 // ============== Charger la couche WFS des points de justice ================
 
-var geoserversUrl = 'http://localhost:8090'
+var geoserversUrl = 'https://projetsgeonum.ens-lyon.fr/cartojustice_gs';
 
 const point_justice_vec = new ol.source.Vector({
   format: new ol.format.GeoJSON(),
   url: function(extent) {
-    return geoserversUrl + '/geoserver/data_point_justice/ows?' + 
+    return geoserversUrl + '/data_point_justice/ows?' + 
            'service=WFS&version=1.0.0&request=GetFeature&typeName=data_point_justice:point_justice' +
            '&outputFormat=application/json&bbox=' + extent.join(',') + ',EPSG:3857';
   },
@@ -170,7 +170,7 @@ const colorsTauxPauvrete = [
 // Source WFS pour la couche cour d'appel
 const courAppelSource = new VectorSource({
   format: new GeoJSON(),
-  url: geoserversUrl + '/geoserver/data_point_justice/ows?'
+  url: geoserversUrl + '/data_point_justice/ows?'
     + 'service=WFS&version=1.0.0&request=GetFeature'
     + '&typename=data_point_justice:cour_appel'
     + '&outputFormat=application/json',
@@ -180,7 +180,7 @@ const courAppelSource = new VectorSource({
 // Source WFS pour la couche tribunal judiciaire 
 const tibunalJudiciaireSource = new VectorSource({
   format: new GeoJSON(),
-  url: geoserversUrl + '/geoserver/data_point_justice/ows?'
+  url: geoserversUrl + '/data_point_justice/ows?'
     + 'service=WFS&version=1.0.0&request=GetFeature'
     + '&typename=data_point_justice:tribunal_judiciaire'
     + '&outputFormat=application/json',
@@ -190,7 +190,7 @@ const tibunalJudiciaireSource = new VectorSource({
 // Source WFS pour la couche cour d'appel
 const PrudhommeSource = new VectorSource({
   format: new GeoJSON(),
-  url: geoserversUrl + '/geoserver/data_point_justice/ows?'
+  url: geoserversUrl + '/data_point_justice/ows?'
     + 'service=WFS&version=1.0.0&request=GetFeature'
     + '&typename=data_point_justice:prudhomme'
     + '&outputFormat=application/json',
@@ -216,7 +216,7 @@ const highlightStyle = new Style({
 
 const commune = new ImageLayer({
   source: new ImageWMS({
-    url: geoserversUrl + '/geoserver/data_point_justice/wms',
+    url: geoserversUrl + '/data_point_justice/wms',
     params: {
       'LAYERS' : 'data_point_justice:commune',
       'TILED': true
