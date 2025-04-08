@@ -29,12 +29,12 @@ const positronLayer = new TileLayer({
 // =========================================================================================
 // ============== Charger la couche WFS des points de justice ================
 
-var geoserversUrl = 'http://localhost:8090'
+var geoserversUrl = 'https://projetsgeonum.ens-lyon.fr/cartojustice_gs';
 
 const point_justice_vec = new ol.source.Vector({
   format: new ol.format.GeoJSON(),
   url: function(extent) {
-    return geoserversUrl + '/geoserver/data_point_justice/ows?' + 
+    return geoserversUrl + '/data_point_justice/ows?' + 
            'service=WFS&version=1.0.0&request=GetFeature&typeName=data_point_justice:point_justice' +
            '&outputFormat=application/json&bbox=' + extent.join(',') + ',EPSG:3857';
   },
@@ -45,17 +45,17 @@ const point_justice_vec = new ol.source.Vector({
 // Dictionnaire des icônes par type de point de justice
 
 const categorieIcons = {
-  "France Service": "/img/FS.png",
+  "France Service": "./img/FS.png",
   "Autre": "./img/logo.png",
-  "Spécialiste hors FS": "/img/S.png",
-  "Domaine juridique": "/img/D.png",
-  "Généraliste hors FS": "/img/G.png"
+  "Spécialiste hors FS": "./img/S.png",
+  "Domaine juridique": "./img/D.png",
+  "Généraliste hors FS": "./img/G.png"
 };
 
 // Fonction de style dynamique
 const pointJusticeStyleFunction = function (feature) {
   const categorie = feature.get('type_pj'); // Récupère la valeur du champ "categorie"
-  const iconSrc = categorieIcons[categorie] || "/img/Divers.png"; // Icône par défaut si non définie
+  const iconSrc = categorieIcons[categorie] || "./img/Divers.png"; // Icône par défaut si non définie
 
   return new ol.style.Style({
     image: new ol.style.Icon({
@@ -170,7 +170,7 @@ const colorsTauxPauvrete = [
 // Source WFS pour la couche cour d'appel
 const courAppelSource = new VectorSource({
   format: new GeoJSON(),
-  url: geoserversUrl + '/geoserver/data_point_justice/ows?'
+  url: geoserversUrl + '/data_point_justice/ows?'
     + 'service=WFS&version=1.0.0&request=GetFeature'
     + '&typename=data_point_justice:cour_appel'
     + '&outputFormat=application/json',
@@ -180,7 +180,7 @@ const courAppelSource = new VectorSource({
 // Source WFS pour la couche tribunal judiciaire 
 const tibunalJudiciaireSource = new VectorSource({
   format: new GeoJSON(),
-  url: geoserversUrl + '/geoserver/data_point_justice/ows?'
+  url: geoserversUrl + '/data_point_justice/ows?'
     + 'service=WFS&version=1.0.0&request=GetFeature'
     + '&typename=data_point_justice:tribunal_judiciaire'
     + '&outputFormat=application/json',
@@ -190,7 +190,7 @@ const tibunalJudiciaireSource = new VectorSource({
 // Source WFS pour la couche cour d'appel
 const PrudhommeSource = new VectorSource({
   format: new GeoJSON(),
-  url: geoserversUrl + '/geoserver/data_point_justice/ows?'
+  url: geoserversUrl + '/data_point_justice/ows?'
     + 'service=WFS&version=1.0.0&request=GetFeature'
     + '&typename=data_point_justice:prudhomme'
     + '&outputFormat=application/json',
@@ -216,7 +216,7 @@ const highlightStyle = new Style({
 
 const commune = new ImageLayer({
   source: new ImageWMS({
-    url: geoserversUrl + '/geoserver/data_point_justice/wms',
+    url: geoserversUrl + '/data_point_justice/wms',
     params: {
       'LAYERS' : 'data_point_justice:commune',
       'TILED': true
@@ -337,11 +337,11 @@ document.addEventListener("DOMContentLoaded", function () {
       // Déplacement du bouton
       if (panelOpen) {
         toggleButton.style.right = (panelWidth + 10) + "px";
-        toggleImg.src = "/img/next.png"; 
+        toggleImg.src = "./img/next.png"; 
         legende.style.right = (panelWidth + 10) + "px"; 
       } else {
         toggleButton.style.right = "10px";
-        toggleImg.src = "/img/prev.png"; 
+        toggleImg.src = "./img/prev.png"; 
         legende.style.right = "10px";
       }
     }, 1); // Délai pour la transition
@@ -869,7 +869,7 @@ map.on("singleclick", function (evt) {
 
 // Ajouter un indicateur de chargement (engrenage)
 const loadingImage = document.createElement('img');
-loadingImage.src = '/img/delai.gif';
+loadingImage.src = './img/delai.gif';
 loadingImage.id = 'loadingIndicator';
 loadingImage.style.position = 'absolute';
 loadingImage.style.top = '50%';
@@ -931,7 +931,7 @@ function createFilterItem(value, listSet, frag, isTypeList) {
     // Ajout de l'image uniquement si l'élément est ajouté à la liste des types
     if (isTypeList) {
       const iconImg = document.createElement('img');
-      iconImg.src = categorieIcons[value] || "/img/Divers.png"; 
+      iconImg.src = categorieIcons[value] || "./img/Divers.png"; 
       iconImg.alt = value;
       iconImg.style.width = "20px"; // Taille de l'icône
       iconImg.style.height = "100%";
@@ -1470,7 +1470,7 @@ locateButton.addEventListener('click', () => {
   if (isLocated) {
       // Si déjà localisé, on supprime le marqueur et réinitialise l'image
       userPositionLayer.getSource().clear();
-      locateImg.src = "/img/localisation.svg"; // Remettre l'icône par défaut
+      locateImg.src = "./img/localisation.svg"; // Remettre l'icône par défaut
       isLocated = false;
   } else {
       // Sinon, obtenir la position de l'utilisateur
@@ -1503,7 +1503,7 @@ locateButton.addEventListener('click', () => {
                   userPositionLayer.getSource().addFeature(userFeature);
 
                   // Changer l’image du bouton pour indiquer que la localisation est active
-                  locateImg.src = "/img/croix.png"; 
+                  locateImg.src = "./img/croix.png"; 
 
                   isLocated = true;
 

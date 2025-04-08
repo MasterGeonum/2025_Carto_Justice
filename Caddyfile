@@ -1,4 +1,6 @@
 :80 {
-    root * /srv
-    file_server
+    handle_path /cartojustice* {
+        root * /srv
+        file_server
+    }
 }
