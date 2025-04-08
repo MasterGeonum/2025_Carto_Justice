@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OGRVRTDataSource>
+    <OGRVRTLayer name="data_brut-Dom_Tom">
+        <SrcDataSource relativeToVRT="1">data_brut.xlsx</SrcDataSource>
+        <!--Header=False-->
+        <SrcLayer>Dom_Tom</SrcLayer>
+        <Field name="fid" src="fid" type="Integer"/>
+        <Field name="id" src="id" type="String"/>
+        <Field name="Cour d'appel" src="Cour d'appel" type="String"/>
+        <Field name="Département" src="Département" type="String"/>
+        <Field name="Tribunal judiciaire" src="Tribunal judiciaire" type="String"/>
+        <Field name="Intitulé du point-justice" src="Intitulé du point-justice" type="String"/>
+        <Field name="Adresse" src="Adresse" type="String"/>
+        <Field name="Ville" src="Ville" type="String"/>
+        <Field name="Code postal" src="Code postal" type="String"/>
+        <Field name="Création/suppression/déjà existant" src="Création/suppression/déjà existant" type="String"/>
+        <Field name="Observations" src="Observations" type="String"/>
+        <Field name="Nombre" src="Nombre" type="String"/>
+        <Field name="telephone" src="telephone" type="String"/>
+        <Field name="mail" src="mail" type="String"/>
+        <Field name="latitude" src="latitude" type="Real"/>
+        <Field name="longitude" src="longitude" type="Real"/>
+    </OGRVRTLayer>
+</OGRVRTDataSource>

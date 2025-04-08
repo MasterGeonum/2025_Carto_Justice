@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OGRVRTDataSource>
+    <OGRVRTLayer name="data_brut-data_app_pj">
+        <SrcDataSource relativeToVRT="1">data_brut.xlsx</SrcDataSource>
+        <!--Header=False-->
+        <SrcLayer>data_app_pj</SrcLayer>
+        <Field name="fid" src="fid" type="Integer"/>
+        <Field name="id" src="id" type="String"/>
+        <Field name="type_pj" src="type_pj" type="String"/>
+        <Field name="intitule" src="intitule" type="String"/>
+        <Field name="adresse" src="adresse" type="String"/>
+        <Field name="ville" src="ville" type="String"/>
+        <Field name="codgeo" src="codgeo" type="String"/>
+        <Field name="statut" src="statut" type="String"/>
+        <Field name="libelle" src="libelle" type="String"/>
+        <Field name="categorie" src="categorie" type="String"/>
+        <Field name="numero" src="numero" type="String"/>
+        <Field name="mail" src="mail" type="String"/>
+        <Field name="pop" src="pop" type="String"/>
+        <Field name="nb_visite" src="nb_visite" type="Integer"/>
+        <Field name="date_maj" src="date_maj" type="Date"/>
+        <Field name="ratio" src="ratio" type="Real"/>
+        <Field name="classe" src="classe" type="String"/>
+        <Field name="remarque" src="remarque" type="String"/>
+        <GeometryType>wkbPoint</GeometryType>
+        <LayerSRS>EPSG:4326</LayerSRS>
+        <GeometryField encoding="PointFromColumns" x="longitude" y="latitude"/>
+    </OGRVRTLayer>
+</OGRVRTDataSource>
